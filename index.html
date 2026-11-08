@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Home - Incubator</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-left">
+    <a href="index.html" class="icon-btn" title="Home">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+        <path d="M12 3l9 8h-3v9h-5v-6h-2v6H6v-9H3l9-8z"/>
+      </svg>
+    </a>
+  </div>
+
+  <div class="title-block">
+    <p class="teks-1">Control Engineering and Artificial Intelligence Lab</p>
+    <h1 class="teks-2">Monitoring ruangan incubator</h1>
+    <nav class="teks-3">
+      <a href="monitoring.html">Monitoring</a>
+      <a href="riwayat.html">History</a>
+      <a href="caution.html">Caution</a>
+    </nav>
+  </div>
+
+  <div class="topbar-right">
+    <a href="#" class="icon-btn lab-logo" title="Lab">
+      <img src="assets/logo-cec.png" alt="LAB" />
+    </a>
+  </div>
+</header>
+
+<div class="title-section">
+  <div class="ts-left"><span class="label">Home</span> — Selamat datang</div>
+  <div class="ts-center"><h2>INCUBATOR MONITORING</h2></div>
+  <div class="ts-right"></div>
+</div>
+
+<main>
+
+  <!-- CAROUSEL -->
+  <section class="hero">
+    <div class="slide">
+      <div class="slide-bg" id="slideBg"></div>
+      <button class="arrow left" onclick="prevSlide()">‹</button>
+      <button class="arrow right" onclick="nextSlide()">›</button>
+      <div class="slide-content">
+        <h3 id="slideTitle"></h3>
+        <p id="slideDesc"></p>
+      </div>
+      <div class="dots" id="dots"></div>
+    </div>
+  </section>
+
+  <!-- MONITORING INSTAN (pengganti section anggota) -->
+  <section class="instant-monitor" id="instantMonitor">
+    <div class="im-header">
+      <h3>📡 Monitoring Instan</h3>
+      <span class="im-badge waiting" id="imBadge">Menunggu data...</span>
+    </div>
+
+    <div class="im-stats">
+      <div class="im-stat">
+        <span class="im-stat-label">Ruangan Normal</span>
+        <span class="im-stat-val" id="imNormal">--</span>
+      </div>
+      <div class="im-stat warn">
+        <span class="im-stat-label">Peringatan</span>
+        <span class="im-stat-val" id="imWarn">--</span>
+      </div>
+      <div class="im-stat">
+        <span class="im-stat-label">Fan Exhaust</span>
+        <span class="im-stat-val" id="imFan">--%</span>
+      </div>
+      <div class="im-stat">
+        <span class="im-stat-label">Update Terakhir</span>
+        <span class="im-stat-val small" id="imTime">--:--:--</span>
+      </div>
+    </div>
+
+    <div class="im-rooms" id="imRooms"></div>
+
+    <a href="monitoring.html" class="im-link">Lihat Monitoring Detail →</a>
+  </section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
