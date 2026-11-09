@@ -588,6 +588,54 @@ body {
   transition: 0.2s;
 }
 .im-link:hover { color: var(--orange); transform: translateX(4px); }
+/* ========== FAN ON/OFF INDIKATOR ========== */
+.fan-status-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 0;
+}
+
+.fan-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  font-size: 28px;
+  font-weight: 800;
+  transition: all 0.4s ease;
+  border: 6px solid;
+}
+
+/* Kondisi ON (Menyala) */
+.fan-status.on {
+  border-color: #16a34a; /* Hijau */
+  color: #16a34a;
+  background: #dcfce7;
+  box-shadow: 0 0 24px rgba(22, 163, 74, 0.4);
+}
+.fan-status.on svg {
+  animation: spinFan 1.5s linear infinite; /* Animasi kipas berputar */
+}
+
+/* Kondisi OFF (Mati) */
+.fan-status.off {
+  border-color: #dc2626; /* Merah */
+  color: #dc2626;
+  background: #fee2e2;
+  box-shadow: 0 0 24px rgba(220, 38, 38, 0.2);
+}
+.fan-status.off svg {
+  animation: none;
+  opacity: 0.5;
+}
+
+@keyframes spinFan {
+  100% { transform: rotate(360deg); }
+}
 /* ============================================================
    RESPONSIVE KHUSUS HP
    ============================================================ */

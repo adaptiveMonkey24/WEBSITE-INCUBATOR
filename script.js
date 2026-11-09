@@ -1,3 +1,22 @@
+const SHEETS_URL = "URL_ANDA_DISINI/exec"; // Ganti dengan URL /exec Anda
+async function fetchFromSheets() {
+  const res = await fetch(SHEETS_URL, { cache: "no-store" });
+  const rows = await res.json(); // rows adalah array dari semua data di Sheet
+
+  // Ambil data TERBARU untuk setiap ruangan (1-6)
+  const rooms = [];
+  for (let i = 1; i <= 6; i++) {
+    const namaRuang = "Ruangan " + i;
+    const rowsRuang = rows.filter(r => r.ruangan === namaRuang);
+    if (rowsRuang.length > 0) {
+      const latest = rowsRuang[rowsRuang.length - 1]; // Ambil baris paling akhir
+      rooms.push({ suhu: +latest.suhu, cahaya: +latest.cahaya });
+    } else {
+      rooms.push({ suhu: 0, cahaya: 0 }); // Jika belum ada data
+    }
+  }
+  return { rooms, fan: 0 }; // 'fan' bisa diambil dari Sheets juga nanti
+}
 /* ============================================================
    KONFIGURASI
    ============================================================ */
@@ -156,7 +175,11 @@ if (page === "index.html" || page === "") {
 
     if (imNormal) imNormal.textContent = normal;
     if (imWarn)   imWarn.textContent   = warn;
-    if (imFan)    imFan.textContent    = Math.round(data.fan) + "%";
+       if (imFan) {
+      const isOn = data.fan === 1 || data.fan === "1" || data.fan === true || data.fan === "ON";
+      imFan.textContent = isOn ? "ON" : "OFF";
+      imFan.style.color = isOn ? "#16a34a" : "#dc2626";
+    }
     if (imTime)   imTime.textContent   = new Date().toLocaleTimeString("id-ID");
 
     if (imBadge) {
@@ -285,48 +308,53 @@ if (page === "monitoring.html") {
     body.style.filter = `drop-shadow(0 0 ${intensity / 4}px rgba(249,115,22,0.9))`;
     document.getElementById("lval" + idx).textContent = Math.round(intensity);
   }
-  function renderFan(pct) {
-    const arcLen = 282.7;
-    const arc = document.getElementById("gaugeArc");
-    if (!arc) return;
-    arc.setAttribute("stroke-dashoffset", arcLen * (1 - pct / 100));
-    const angle = -90 + (pct / 100) * 180;
-    document.getElementById("gaugeNeedle").setAttribute(
-      "transform", `rotate(${angle} 110 110)`
-    );
-    document.getElementById("fanText").textContent = Math.round(pct) + "%";
+    function renderFan(status) {
+    const el = document.getElementById("fanStatus");
+    const text = document.getElementById("fanText");
+    if (!el || !text) return;
+
+    // Cek apakah status bernilai 1, "1", true, atau "ON"
+    const isOn = (status === 1 || status === "1" || status === true || status === "ON");
+
+    if (isOn) {
+      el.className = "fan-status on";
+      text.textContent = "ON";
+    } else {
+      el.className = "fan-status off";
+      text.textContent = "OFF";
+    }
   }
 
   const connBar = document.getElementById("connBar");
   function showConn() { connBar.classList.remove("hidden"); }
   function hideConn() { connBar.classList.add("hidden"); }
 
-  function mockData() {
+    function mockData() {
     return {
       rooms: Array.from({length: 6}, () => ({
         suhu: 34 + Math.random() * 7,
         cahaya: 30 + Math.random() * 60
       })),
-      fan: 20 + Math.random() * 70
+      fan: Math.random() > 0.5 ? 1 : 0  // Acak 1 (ON) atau 0 (OFF)
     };
   }
 
-  async function fetchData() {
-    let data;
-    if (DEMO_MODE) {
-      data = mockData();
+  // Di dalam if (page === "monitoring.html")
+async function fetchData() {
+  let data;
+  if (DEMO_MODE) {
+    data = mockData();
+  } else {
+    try {
+      data = await fetchFromSheets(); // <-- Ganti di sini
       hideConn();
-    } else {
-      try {
-        const res = await fetch(ESP_URL + "/api/data", { cache: "no-store" });
-        if (!res.ok) throw new Error("gagal");
-        data = await res.json();
-        hideConn();
-      } catch {
-        showConn();
-        return;
-      }
+    } catch {
+      showConn();
+      return;
     }
+  }
+  // ... sisa kode renderThermo, renderLamp, renderFan, saveSnapshot ...
+
     data.rooms.forEach((r, i) => {
       renderThermo(i, r.suhu);
       renderLamp(i, r.cahaya);
