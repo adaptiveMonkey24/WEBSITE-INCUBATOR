@@ -2,8 +2,8 @@
 #include <WebServer.h>
 #include <LittleFS.h>
 
-const char* ssid = "iQOO Z11 5G Riu";
-const char* password = "kokaKoLa";
+const char* ssid = "Nama WIFI";
+const char* password = "pass";
 
 WebServer server(80);
 
