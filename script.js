@@ -1,11 +1,11 @@
-const SHEETS_URL = "URL_ANDA_DISINI/exec"; // Ganti dengan URL /exec Anda
+const SHEETS_URL = "https://docs.google.com/spreadsheets/d/113FrTqba7QQdQsfmd2cf1y479I-oMj8k34GfAp6p8TY/edit?usp=sharing"; // Ganti dengan URL /exec Anda
 async function fetchFromSheets() {
   const res = await fetch(SHEETS_URL, { cache: "no-store" });
   const rows = await res.json(); // rows adalah array dari semua data di Sheet
 
   // Ambil data TERBARU untuk setiap ruangan (1-6)
   const rooms = [];
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 5; i++) {
     const namaRuang = "Ruangan " + i;
     const rowsRuang = rows.filter(r => r.ruangan === namaRuang);
     if (rowsRuang.length > 0) {
@@ -74,7 +74,20 @@ const SLIDES = [
 /* ============================================================
    3. DETEKSI HALAMAN
    ============================================================ */
-const page = location.pathname.split("/").pop() || "index.html";
+/* script.js — taruh setelah baris:
+   const page = location.pathname.split("/").pop() || "index.html"; */
+
+const NAV_MAP = {
+  "monitoring.html": "Monitoring",
+  "riwayat.html":    "History",
+  "caution.html":    "Caution"
+};
+const activeLabel = NAV_MAP[page];
+if (activeLabel) {
+  document.querySelectorAll(".teks-3 a").forEach(a => {
+    if (a.textContent.trim() === activeLabel) a.classList.add("active");
+  });
+}
 
 /* ============================================================
    4. UTIL: SIMPAN SNAPSHOT RIWAYAT
